@@ -1,3 +1,7 @@
+<?php
+require_once __DIR__ . "/configs/auth_check.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,116 +18,7 @@
   <div class="admin-wrapper">
     
     <!-- Admin Sidebar -->
-    <aside class="admin-sidebar">
-      <div class="sidebar-brand">
-        <a href="index.html" class="sidebar-brand-title text-decoration-none">
-          NOVA FORM <span class="badge-role">ADMIN</span>
-        </a>
-      </div>
-      <ul class="sidebar-menu">
-        <li class="sidebar-heading">Operations</li>
-        
-    <li class="sidebar-item">
-      <a href="index.html" class="sidebar-link active">
-        <i class="bi bi-grid"></i>
-        <span>Overview</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="products.html" class="sidebar-link ">
-        <i class="bi bi-box-seam"></i>
-        <span>Products</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="product-add.html" class="sidebar-link ">
-        <i class="bi bi-plus-circle"></i>
-        <span>Add Product</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="categories.html" class="sidebar-link ">
-        <i class="bi bi-tags"></i>
-        <span>Categories</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="brands.html" class="sidebar-link ">
-        <i class="bi bi-award"></i>
-        <span>Brands</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="inventory.html" class="sidebar-link ">
-        <i class="bi bi-boxes"></i>
-        <span>Inventory</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="orders.html" class="sidebar-link ">
-        <i class="bi bi-cart-check"></i>
-        <span>Orders</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="customers.html" class="sidebar-link ">
-        <i class="bi bi-people"></i>
-        <span>Customers</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="reviews.html" class="sidebar-link ">
-        <i class="bi bi-chat-left-quote"></i>
-        <span>Reviews</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="banners.html" class="sidebar-link ">
-        <i class="bi bi-images"></i>
-        <span>Banners</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="website-content.html" class="sidebar-link ">
-        <i class="bi bi-layout-text-window-reverse"></i>
-        <span>Website Content</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="settings.html" class="sidebar-link ">
-        <i class="bi bi-gear"></i>
-        <span>Settings</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="profile.html" class="sidebar-link ">
-        <i class="bi bi-person-badge"></i>
-        <span>Profile</span>
-      </a>
-    </li>
-  
-      </ul>
-      <div class="sidebar-footer">
-        <a href="../front-site/index.html" class="btn btn-outline-light btn-sm w-100 mb-2 text-start">
-          <i class="bi bi-box-arrow-up-right me-2"></i> Visit Storefront
-        </a>
-        <a href="login.html" class="btn btn-dark btn-sm w-100 text-start text-danger">
-          <i class="bi bi-power me-2"></i> Sign Out
-        </a>
-      </div>
-    </aside>
+   <?php require_once __DIR__ .'/parts/asidebar.php';?>
     
 
     <div class="admin-main">
@@ -172,7 +67,7 @@
             <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
             <li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+            <li><a class="dropdown-item text-danger" href="./actions_handle/logout_handle.php"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
           </ul>
         </div>
       </div>

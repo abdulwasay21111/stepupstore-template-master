@@ -3,6 +3,7 @@ require_once __DIR__ . "/configs/session_check.php";
 require_once __DIR__ . "/configs/db_con.php";
 
 
+
 $register_errors = $_SESSION['registration_errors'] ?? [];
 unset($_SESSION['registration_errors']);
 
@@ -25,7 +26,7 @@ unset($_SESSION["success"]);
         <h2 class="fw-bold mb-1">NOVA FORM</h2>
         <span class="badge bg-dark border text-white px-3 py-1">STAFF REGISTRATION</span>
       </div>
-       <?php if (!empty($register_errors)) { ?>
+         <?php if (!empty($register_errors)) { ?>
                 <div class="alert alert-danger">
                     <ul>
                         <?php foreach ($register_errors as $error) { ?>
@@ -39,6 +40,7 @@ unset($_SESSION["success"]);
                     <?php  echo $success; ?>
                 </div>
             <?php } ?>
+
       <form action="./actions_handle/register_handle.php" method="POST">
         <div class="mb-3">
           <label class="form-label small fw-bold">Full Name</label>
