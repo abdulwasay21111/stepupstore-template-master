@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_category"])) {
     $cat_name = trim($_POST["category_name"]);
 
     if (empty($cat_name)) {
-        $error_msg = "Category name is required!";
+        $_SESSION['error_msg'] = "Category name is required!";
     } else {
         $cat_name = mysqli_real_escape_string($connection, $cat_name);
 
@@ -20,17 +20,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_category"])) {
         $check_result = mysqli_query($connection, $check_query);
 
         if (mysqli_num_rows($check_result) > 0) {
-            $error_msg = "Category '$cat_name' already exists!";
+            $_SESSION['error_msg'] = "Category '$cat_name' already exists!";
         } else {
             // Database table mein insert krna
             $insert_query = "INSERT INTO categories (name) VALUES ('$cat_name')";
             if (mysqli_query($connection, $insert_query)) {
-                $success_msg = "Category '$cat_name' added successfully!";
+                $_SESSION['success_msg'] = "Category '$cat_name' added successfully!";
             } else {
-                $error_msg = "Failed to add category!";
+                $_SESSION['error_msg'] = "Failed to add category!";
             }
         }
     }
+
+    // Refresh karne par form dubara submit na ho, iske liye redirect
+    header("Location: categories.php");
+    exit();
+}
+
+// Jab Delete Category pr click ho
+if (isset($_GET["delete_id"])) {
+    $delete_id = mysqli_real_escape_string($connection, $_GET["delete_id"]);
+
+    // Database se category delete krna
+    $delete_query = "DELETE FROM categories WHERE id = '$delete_id'";
+    if (mysqli_query($connection, $delete_query)) {
+        $_SESSION['success_msg'] = "Category deleted successfully!";
+    } else {
+        $_SESSION['error_msg'] = "Failed to delete category!";
+    }
+
+    // URL clean rakhne ke liye redirect
+    header("Location: categories.php");
+    exit();
 }
 
 // Database se sari categories get krna
@@ -142,6 +163,7 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
                   <th style="width: 100px;">#ID</th>
                   <th>Category Name</th>
                   <th>Created At</th>
+                  <th style="width: 120px;">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -160,13 +182,40 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
                       <td class="text-muted small">
                         <?= !empty($row['created_at']) ? $row['created_at'] : '—' ?>
                       </td>
+                      <td>
+                        <!-- Delete Button: Modal open krega -->
+                        <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2" data-bs-toggle="modal" data-bs-target="#deleteModal<?= $row['id'] ?>">
+                          <i class="bi bi-trash"></i> Delete
+                        </button>
+
+                        <!-- Delete Confirmation Modal -->
+                        <div class="modal fade" id="deleteModal<?= $row['id'] ?>" tabindex="-1" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered modal-sm">
+                            <div class="modal-content text-center p-3">
+                              <div class="modal-body">
+                                <div class="text-danger fs-1 mb-2">
+                                  <i class="bi bi-exclamation-circle"></i>
+                                </div>
+                                <h6 class="fw-bold mb-2">Delete Category?</h6>
+                                <p class="text-muted small mb-3">
+                                  Are you sure you want to delete <strong><?= htmlspecialchars($row['name']) ?></strong>?
+                                </p>
+                                <div class="d-flex justify-content-center gap-2">
+                                  <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                  <a href="categories.php?delete_id=<?= $row['id'] ?>" class="btn btn-sm btn-danger">Yes, Delete</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
                     </tr>
                 <?php 
                     } 
                 } else { 
                 ?>
                     <tr>
-                      <td colspan="3" class="text-center py-4 text-muted">
+                      <td colspan="4" class="text-center py-4 text-muted">
                         No categories found in database. Click <strong>"Add Category"</strong> above to add one.
                       </td>
                     </tr>

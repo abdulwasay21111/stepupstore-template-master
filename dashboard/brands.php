@@ -1,3 +1,14 @@
+<?php
+require_once __DIR__ . "/configs/session_check.php";
+require_once __DIR__ . "/configs/db_con.php";
+
+$error_msg = $_SESSION['error_msg'] ?? "";
+$success_msg = $_SESSION['success_msg'] ?? "";
+unset($_SESSION['error_msg'], $_SESSION['success_msg']);
+
+// Database se sare brands get krna
+$get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY id DESC");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,260 +25,143 @@
   <div class="admin-wrapper">
     
     <!-- Admin Sidebar -->
-    <aside class="admin-sidebar">
-      <div class="sidebar-brand">
-        <a href="index.html" class="sidebar-brand-title text-decoration-none">
-          NOVA FORM <span class="badge-role">ADMIN</span>
-        </a>
-      </div>
-      <ul class="sidebar-menu">
-        <li class="sidebar-heading">Operations</li>
-        
-    <li class="sidebar-item">
-      <a href="index.html" class="sidebar-link ">
-        <i class="bi bi-grid"></i>
-        <span>Overview</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="products.html" class="sidebar-link ">
-        <i class="bi bi-box-seam"></i>
-        <span>Products</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="product-add.html" class="sidebar-link ">
-        <i class="bi bi-plus-circle"></i>
-        <span>Add Product</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="categories.html" class="sidebar-link ">
-        <i class="bi bi-tags"></i>
-        <span>Categories</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="brands.html" class="sidebar-link active">
-        <i class="bi bi-award"></i>
-        <span>Brands</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="inventory.html" class="sidebar-link ">
-        <i class="bi bi-boxes"></i>
-        <span>Inventory</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="orders.html" class="sidebar-link ">
-        <i class="bi bi-cart-check"></i>
-        <span>Orders</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="customers.html" class="sidebar-link ">
-        <i class="bi bi-people"></i>
-        <span>Customers</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="reviews.html" class="sidebar-link ">
-        <i class="bi bi-chat-left-quote"></i>
-        <span>Reviews</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="banners.html" class="sidebar-link ">
-        <i class="bi bi-images"></i>
-        <span>Banners</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="website-content.html" class="sidebar-link ">
-        <i class="bi bi-layout-text-window-reverse"></i>
-        <span>Website Content</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="settings.html" class="sidebar-link ">
-        <i class="bi bi-gear"></i>
-        <span>Settings</span>
-      </a>
-    </li>
-  
-    <li class="sidebar-item">
-      <a href="profile.html" class="sidebar-link ">
-        <i class="bi bi-person-badge"></i>
-        <span>Profile</span>
-      </a>
-    </li>
-  
-      </ul>
-      <div class="sidebar-footer">
-        <a href="../front-site/index.html" class="btn btn-outline-light btn-sm w-100 mb-2 text-start">
-          <i class="bi bi-box-arrow-up-right me-2"></i> Visit Storefront
-        </a>
-        <a href="login.html" class="btn btn-dark btn-sm w-100 text-start text-danger">
-          <i class="bi bi-power me-2"></i> Sign Out
-        </a>
-      </div>
-    </aside>
-    
+    <?php require_once __DIR__ . '/parts/asidebar.php'; ?>
 
     <div class="admin-main">
       
-    <!-- Topbar -->
-    <header class="admin-topbar">
-      <div class="d-flex align-items-center gap-3">
-        <button class="btn btn-link text-dark p-0 d-lg-none" id="sidebarToggleBtn" aria-label="Toggle Navigation">
-          <i class="bi bi-list fs-3"></i>
-        </button>
-        <div class="topbar-search">
-          <i class="bi bi-search search-icon"></i>
-          <input type="text" class="form-control" id="tableSearchInput" placeholder="Quick search inventory, orders...">
-        </div>
-      </div>
-
-      <div class="topbar-actions">
-        <a href="../front-site/index.html" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
-          <i class="bi bi-eye"></i> View Site
-        </a>
-        
-        <div class="dropdown">
-          <a href="#" class="topbar-icon-btn" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
-            <i class="bi bi-bell"></i>
-            <span class="topbar-badge-dot"></span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 280px;">
-            <li><h6 class="dropdown-header text-uppercase small fw-bold">Recent Alerts</h6></li>
-            <li><a class="dropdown-item small py-2" href="orders.html"><i class="bi bi-bag-check text-success me-2"></i> New Order #NF-88291 received (PKR 14,999)</a></li>
-            <li><a class="dropdown-item small py-2" href="inventory.html"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock: Sahara Suede Chukka (9 left)</a></li>
-            <li><a class="dropdown-item small py-2" href="reviews.html"><i class="bi bi-star text-primary me-2"></i> New 5-star review pending approval</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.html">View All Notifications</a></li>
-          </ul>
+      <!-- Topbar -->
+      <header class="admin-topbar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-link text-dark p-0 d-lg-none" id="sidebarToggleBtn" aria-label="Toggle Navigation">
+            <i class="bi bi-list fs-3"></i>
+          </button>
+          <div class="topbar-search">
+            <i class="bi bi-search search-icon"></i>
+            <input type="text" class="form-control" id="tableSearchInput" placeholder="Quick search inventory, orders...">
+          </div>
         </div>
 
-        <div class="dropdown">
-          <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop" class="admin-avatar me-2" alt="Admin">
-            <div class="d-none d-sm-block text-start">
-              <div class="fw-semibold small leading-none">M. Asif</div>
-              <div class="text-muted" style="font-size: 0.7rem;">Store Director</div>
-            </div>
+        <div class="topbar-actions">
+          <a href="../front-site/index.html" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
+            <i class="bi bi-eye"></i> View Site
           </a>
-          <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-            <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
-            <li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
-          </ul>
+          
+          <div class="dropdown">
+            <a href="#" class="topbar-icon-btn" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
+              <i class="bi bi-bell"></i>
+              <span class="topbar-badge-dot"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 280px;">
+              <li><h6 class="dropdown-header text-uppercase small fw-bold">Recent Alerts</h6></li>
+              <li><a class="dropdown-item small py-2" href="orders.html"><i class="bi bi-bag-check text-success me-2"></i> New Order #NF-88291 received (PKR 14,999)</a></li>
+              <li><a class="dropdown-item small py-2" href="inventory.html"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock: Sahara Suede Chukka (9 left)</a></li>
+              <li><a class="dropdown-item small py-2" href="reviews.html"><i class="bi bi-star text-primary me-2"></i> New 5-star review pending approval</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.html">View All Notifications</a></li>
+            </ul>
+          </div>
+
+          <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop" class="admin-avatar me-2" alt="Admin">
+              <div class="d-none d-sm-block text-start">
+                <div class="fw-semibold small leading-none">M. Asif</div>
+                <div class="text-muted" style="font-size: 0.7rem;">Store Director</div>
+              </div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+              <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
+              <li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </header>
-    
+      </header>
 
       <main class="admin-content">
         
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h1 class="page-title">Footwear Brands & Labels</h1>
-        <p class="page-subtitle">Manage proprietary atelier labels within NOVA FORM.</p>
-      </div>
-      <button class="btn btn-sm btn-dark" onclick="alert('Add brand dialog demo');">
-        <i class="bi bi-plus-lg me-1"></i> Add Brand Label
-      </button>
-    </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h1 class="page-title">Footwear Brands & Labels</h1>
+            <p class="page-subtitle">Manage proprietary atelier labels within NOVA FORM.</p>
+          </div>
+          <!-- Add Brand Label Button -->
+          <button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addBrandModal">
+            <i class="bi bi-plus-lg me-1"></i> Add Brand Label
+          </button>
+        </div>
 
-    <div class="row g-4">
-      
-        <div class="col-md-6 col-lg-3">
-          <div class="admin-card h-100 p-4 text-center">
-            <div class="rounded-circle bg-dark text-white d-inline-flex align-items-center justify-content-center fw-bold fs-5 mb-3" style="width: 64px; height: 64px;">
-              NF BL
-            </div>
-            <h5 class="fw-bold fs-6 mb-1">NOVA FORM Black Label</h5>
-            <span class="badge bg-light text-dark border mb-3">8 Shoe Models</span>
-            <p class="text-muted small mb-4">Bespoke-grade Goodyear welted formal footwear</p>
-            <div class="d-flex justify-content-center gap-2 mt-auto">
-              <button class="btn btn-sm btn-outline-dark" onclick="alert('Brand settings');">Manage</button>
-            </div>
+        <!-- Alerts -->
+        <?php if (!empty($success_msg)) { ?>
+          <div class="alert alert-success py-2 mb-3">
+            <i class="bi bi-check-circle me-1"></i> <?= $success_msg ?>
           </div>
+          <?php unset($success_msg); ?>
+        <?php } ?>
+
+        <?php if (!empty($error_msg)) { ?>
+          <div class="alert alert-danger py-2 mb-3">
+            <i class="bi bi-exclamation-triangle me-1"></i> <?= $error_msg ?>
+          </div>
+          <?php unset($error_msg); ?>
+        <?php } ?>
+
+        <div class="row g-4">
+          <?php 
+          if ($get_brands && mysqli_num_rows($get_brands) > 0) {
+              foreach ($get_brands as $brand) { 
+          ?>
+              <div class="col-md-6 col-lg-3">
+                <div class="admin-card h-100 p-4 text-center">
+                  <div class="rounded-circle bg-dark text-white d-inline-flex align-items-center justify-content-center fw-bold fs-5 mb-3" style="width: 64px; height: 64px;">
+                    <i class="bi bi-award fs-3"></i>
+                  </div>
+                  <h5 class="fw-bold fs-6 mb-1"><?= htmlspecialchars($brand['name']) ?></h5>
+                  <span class="badge bg-light text-dark border mb-3">Brand #<?= $brand['id'] ?></span>
+                  <p class="text-muted small mb-0">Added: <?= !empty($brand['created_at']) ? $brand['created_at'] : 'Recently' ?></p>
+                </div>
+              </div>
+          <?php 
+              }
+          } else { 
+          ?>
+              <div class="col-12">
+                <div class="text-center py-5 text-muted bg-white rounded border">
+                  <i class="bi bi-award fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                  <p class="mb-2 fw-semibold">No brand labels found in the database.</p>
+                  <button class="btn btn-sm btn-dark" data-bs-toggle="modal" data-bs-target="#addBrandModal">
+                    <i class="bi bi-plus-lg me-1"></i> Add Your First Brand
+                  </button>
+                </div>
+              </div>
+          <?php } ?>
         </div>
       
-        <div class="col-md-6 col-lg-3">
-          <div class="admin-card h-100 p-4 text-center">
-            <div class="rounded-circle bg-dark text-white d-inline-flex align-items-center justify-content-center fw-bold fs-5 mb-3" style="width: 64px; height: 64px;">
-              NF AR
-            </div>
-            <h5 class="fw-bold fs-6 mb-1">NOVA FORM Artisan</h5>
-            <span class="badge bg-light text-dark border mb-3">6 Shoe Models</span>
-            <p class="text-muted small mb-4">Hand-patinated loafers and hand-sewn leather moccasins</p>
-            <div class="d-flex justify-content-center gap-2 mt-auto">
-              <button class="btn btn-sm btn-outline-dark" onclick="alert('Brand settings');">Manage</button>
-            </div>
-          </div>
-        </div>
-      
-        <div class="col-md-6 col-lg-3">
-          <div class="admin-card h-100 p-4 text-center">
-            <div class="rounded-circle bg-dark text-white d-inline-flex align-items-center justify-content-center fw-bold fs-5 mb-3" style="width: 64px; height: 64px;">
-              NF HT
-            </div>
-            <h5 class="fw-bold fs-6 mb-1">NOVA FORM Heritage</h5>
-            <span class="badge bg-light text-dark border mb-3">4 Shoe Models</span>
-            <p class="text-muted small mb-4">Authentic Pakistani traditional footwear & Peshawari chappals</p>
-            <div class="d-flex justify-content-center gap-2 mt-auto">
-              <button class="btn btn-sm btn-outline-dark" onclick="alert('Brand settings');">Manage</button>
-            </div>
-          </div>
-        </div>
-      
-        <div class="col-md-6 col-lg-3">
-          <div class="admin-card h-100 p-4 text-center">
-            <div class="rounded-circle bg-dark text-white d-inline-flex align-items-center justify-content-center fw-bold fs-5 mb-3" style="width: 64px; height: 64px;">
-              NF UB
-            </div>
-            <h5 class="fw-bold fs-6 mb-1">NOVA FORM Urban</h5>
-            <span class="badge bg-light text-dark border mb-3">6 Shoe Models</span>
-            <p class="text-muted small mb-4">Contemporary court sneakers, chelsea boots and trainers</p>
-            <div class="d-flex justify-content-center gap-2 mt-auto">
-              <button class="btn btn-sm btn-outline-dark" onclick="alert('Brand settings');">Manage</button>
-            </div>
-          </div>
-        </div>
-      
-    </div>
-  
       </main>
     </div>
   </div>
 
-  <!-- Delete Confirmation Modal (Shared) -->
-  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-      <div class="modal-content border-0 shadow">
-        <div class="modal-body text-center p-4">
-          <div class="text-danger fs-1 mb-2"><i class="bi bi-exclamation-circle"></i></div>
-          <h5 class="fw-bold mb-2">Confirm Delete?</h5>
-          <p class="text-muted small mb-4">Are you sure you want to remove <strong id="deleteTargetName">this item</strong> from the database? This action is simulated for the prototype.</p>
-          <div class="d-flex justify-content-center gap-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-sm btn-danger px-3" id="btnConfirmDelete">Delete</button>
+  <!-- Add Brand Modal (Sirf Brand Name) -->
+  <div class="modal fade" id="addBrandModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form action="actions_handle/brand_add_handle.php" method="POST">
+          <div class="modal-header">
+            <h5 class="modal-title fs-6 fw-bold">Add Brand Label</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
-        </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Brand Name</label>
+              <input type="text" name="brand_name" class="form-control" placeholder="e.g. NOVA FORM Black Label" required autofocus>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" name="add_brand" class="btn btn-sm btn-dark">Save Brand</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
