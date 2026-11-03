@@ -53,9 +53,9 @@ unset($_SESSION["success"]);
         <div class="mb-3">
           <label class="form-label small fw-bold">Role</label>
           <select name="role" class="form-select">
-            <option>Store Manager</option>
-            <option>Inventory Specialist</option>
-            <option>Customer Concierge</option>
+            <option>Admin</option>
+            <option>Manager</option>
+            
           </select>
         </div>
         <div class="mb-3">
