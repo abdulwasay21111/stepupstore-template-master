@@ -88,7 +88,7 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
         <h1 class="page-title">Add New Footwear Model</h1>
         <p class="page-subtitle">Configure specifications, pricing, imagery, and size EU 39-46 variant matrix.</p>
       </div>
-      <a href="products.html" class="btn btn-sm btn-outline-secondary">
+      <a href="products.php" class="btn btn-sm btn-outline-secondary">
         <i class="bi bi-arrow-left me-1"></i> Back to Products
       </a>
     </div>

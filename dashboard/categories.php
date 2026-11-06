@@ -8,7 +8,7 @@ unset($_SESSION['error_msg'], $_SESSION['success_msg']);
 
 // Jab Add Category form submit ho
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_category"])) {
-    $cat_name = trim($_POST["category_name"]);
+    $cat_name = trim($_POST["category_name"] ?? "");
 
     if (empty($cat_name)) {
         $_SESSION['error_msg'] = "Category name is required!";
@@ -37,9 +37,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_category"])) {
     exit();
 }
 
+// Jab Edit Category form submit ho
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["edit_category"])) {
+    $cat_id = intval($_POST["category_id"] ?? 0);
+    $cat_name = trim($_POST["category_name"] ?? "");
+
+    if ($cat_id <= 0 || empty($cat_name)) {
+        $_SESSION['error_msg'] = "Category name is required!";
+    } else {
+        $cat_name = mysqli_real_escape_string($connection, $cat_name);
+
+        // Duplication check: kya ye category name kisi aur category ke pass pehle se mojood hai?
+        $check_query = "SELECT id FROM categories WHERE name = '$cat_name' AND id != '$cat_id'";
+        $check_result = mysqli_query($connection, $check_query);
+
+        if (mysqli_num_rows($check_result) > 0) {
+            $_SESSION['error_msg'] = "Category '$cat_name' already exists!";
+        } else {
+            // Database table mein update krna
+            $update_query = "UPDATE categories SET name = '$cat_name' WHERE id = '$cat_id'";
+            if (mysqli_query($connection, $update_query)) {
+                $_SESSION['success_msg'] = "Category updated successfully!";
+            } else {
+                $_SESSION['error_msg'] = "Failed to update category: " . mysqli_error($connection);
+            }
+        }
+    }
+
+    header("Location: categories.php");
+    exit();
+}
+
 // Jab Delete Category pr click ho
 if (isset($_GET["delete_id"])) {
-    $delete_id = mysqli_real_escape_string($connection, $_GET["delete_id"]);
+    $delete_id = intval($_GET["delete_id"]);
 
     // Database se category delete krna
     $delete_query = "DELETE FROM categories WHERE id = '$delete_id'";
@@ -101,11 +132,10 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 280px;">
               <li><h6 class="dropdown-header text-uppercase small fw-bold">Recent Alerts</h6></li>
-              <li><a class="dropdown-item small py-2" href="orders.html"><i class="bi bi-bag-check text-success me-2"></i> New Order #NF-88291 received (PKR 14,999)</a></li>
-              <li><a class="dropdown-item small py-2" href="inventory.html"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock: Sahara Suede Chukka (9 left)</a></li>
-              <li><a class="dropdown-item small py-2" href="reviews.html"><i class="bi bi-star text-primary me-2"></i> New 5-star review pending approval</a></li>
+              <li><a class="dropdown-item small py-2" href="orders.php"><i class="bi bi-bag-check text-success me-2"></i> New Order received</a></li>
+              <li><a class="dropdown-item small py-2" href="inventory.php"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock alerts</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.html">View All Notifications</a></li>
+              <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.php">View All Notifications</a></li>
             </ul>
           </div>
 
@@ -118,10 +148,10 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
               </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-              <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
-              <li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
+              <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
+              <li><a class="dropdown-item" href="settings.php"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-danger" href="login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+              <li><a class="dropdown-item text-danger" href="actions_handle/logout_handle.php"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
             </ul>
           </div>
         </div>
@@ -145,14 +175,12 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
           <div class="alert alert-success py-2 mb-3">
             <i class="bi bi-check-circle me-1"></i> <?= $success_msg ?>
           </div>
-          <?php unset($success_msg); ?>
         <?php } ?>
 
         <?php if (!empty($error_msg)) { ?>
           <div class="alert alert-danger py-2 mb-3">
             <i class="bi bi-exclamation-triangle me-1"></i> <?= $error_msg ?>
           </div>
-          <?php unset($error_msg); ?>
         <?php } ?>
 
         <div class="admin-card">
@@ -163,7 +191,7 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
                   <th style="width: 100px;">#ID</th>
                   <th>Category Name</th>
                   <th>Created At</th>
-                  <th style="width: 120px;">Action</th>
+                  <th style="width: 160px;">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -183,10 +211,42 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
                         <?= !empty($row['created_at']) ? $row['created_at'] : '—' ?>
                       </td>
                       <td>
-                        <!-- Delete Button: Modal open krega -->
-                        <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2" data-bs-toggle="modal" data-bs-target="#deleteModal<?= $row['id'] ?>">
-                          <i class="bi bi-trash"></i> Delete
-                        </button>
+                        <div class="d-flex gap-1">
+                          <!-- Edit Button: Opens Edit Modal -->
+                          <button type="button" class="btn btn-sm btn-outline-dark py-1 px-2" data-bs-toggle="modal" data-bs-target="#editModal<?= $row['id'] ?>" title="Edit Category">
+                            <i class="bi bi-pencil"></i> Edit
+                          </button>
+
+                          <!-- Delete Button: Opens Delete Modal -->
+                          <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2" data-bs-toggle="modal" data-bs-target="#deleteModal<?= $row['id'] ?>" title="Delete Category">
+                            <i class="bi bi-trash"></i> Delete
+                          </button>
+                        </div>
+
+                        <!-- Edit Modal -->
+                        <div class="modal fade" id="editModal<?= $row['id'] ?>" tabindex="-1" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content text-start">
+                              <form action="categories.php" method="POST">
+                                <input type="hidden" name="category_id" value="<?= $row['id'] ?>">
+                                <div class="modal-header">
+                                  <h5 class="modal-title fs-6 fw-bold">Edit Category</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <div class="mb-3">
+                                    <label class="form-label small fw-bold">Category Name</label>
+                                    <input type="text" name="category_name" class="form-control" value="<?= htmlspecialchars($row['name']) ?>" required>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                  <button type="submit" name="edit_category" class="btn btn-sm btn-dark">Update Category</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
 
                         <!-- Delete Confirmation Modal -->
                         <div class="modal fade" id="deleteModal<?= $row['id'] ?>" tabindex="-1" aria-hidden="true">
@@ -225,7 +285,7 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
           </div>
         </div>
 
-        <!-- Add Category Modal (Only Category Name) -->
+        <!-- Add Category Modal -->
         <div class="modal fade" id="addCatModal" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

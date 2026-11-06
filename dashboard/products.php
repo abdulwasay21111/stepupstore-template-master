@@ -1,10 +1,19 @@
 <?php
+require_once __DIR__ . "/configs/session_check.php";
 require_once __DIR__ . "/configs/db_con.php";
+
+$error_msg = $_SESSION['error_msg'] ?? "";
+$success_msg = $_SESSION['success_msg'] ?? "";
+unset($_SESSION['error_msg'], $_SESSION['success_msg']);
 
 // Agar delete product ki request ho
 if (isset($_GET["delete_id"])) {
     $delete_id = intval($_GET["delete_id"]);
-    mysqli_query($connection, "DELETE FROM products WHERE id = '$delete_id'");
+    if (mysqli_query($connection, "DELETE FROM products WHERE id = '$delete_id'")) {
+        $_SESSION['success_msg'] = "Product deleted successfully!";
+    } else {
+        $_SESSION['error_msg'] = "Failed to delete product: " . mysqli_error($connection);
+    }
     header("Location: products.php");
     exit();
 }
@@ -41,7 +50,14 @@ if (!empty($brand_filter)) {
 
 $query .= " ORDER BY products.id DESC";
 $get_products = mysqli_query($connection, $query);
-$total_products = $get_products ? mysqli_num_rows($get_products) : 0;
+
+$products_list = [];
+if ($get_products) {
+    while ($p = mysqli_fetch_assoc($get_products)) {
+        $products_list[] = $p;
+    }
+}
+$total_products = count($products_list);
 
 $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY name ASC");
 $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC");
@@ -90,11 +106,10 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 280px;">
               <li><h6 class="dropdown-header text-uppercase small fw-bold">Recent Alerts</h6></li>
-              <li><a class="dropdown-item small py-2" href="orders.html"><i class="bi bi-bag-check text-success me-2"></i> New Order #NF-88291 received (PKR 14,999)</a></li>
-              <li><a class="dropdown-item small py-2" href="inventory.html"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock: Sahara Suede Chukka (9 left)</a></li>
-              <li><a class="dropdown-item small py-2" href="reviews.html"><i class="bi bi-star text-primary me-2"></i> New 5-star review pending approval</a></li>
+              <li><a class="dropdown-item small py-2" href="orders.php"><i class="bi bi-bag-check text-success me-2"></i> New Order received</a></li>
+              <li><a class="dropdown-item small py-2" href="inventory.php"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock alerts</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.html">View All Notifications</a></li>
+              <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.php">View All Notifications</a></li>
             </ul>
           </div>
 
@@ -107,10 +122,10 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
               </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-              <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
-              <li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
+              <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
+              <li><a class="dropdown-item" href="settings.php"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-danger" href="login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+              <li><a class="dropdown-item text-danger" href="actions_handle/logout_handle.php"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
             </ul>
           </div>
         </div>
@@ -129,6 +144,19 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
             </a>
           </div>
         </div>
+
+        <!-- Alerts -->
+        <?php if (!empty($success_msg)) { ?>
+          <div class="alert alert-success py-2 mb-3">
+            <i class="bi bi-check-circle me-1"></i> <?= $success_msg ?>
+          </div>
+        <?php } ?>
+
+        <?php if (!empty($error_msg)) { ?>
+          <div class="alert alert-danger py-2 mb-3">
+            <i class="bi bi-exclamation-triangle me-1"></i> <?= $error_msg ?>
+          </div>
+        <?php } ?>
 
         <!-- Filters & Search Toolbar -->
         <div class="admin-card mb-4">
@@ -190,8 +218,8 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
                 </tr>
               </thead>
               <tbody class="filterable-table-body">
-                <?php if ($get_products && mysqli_num_rows($get_products) > 0) { ?>
-                  <?php foreach ($get_products as $row) { ?>
+                <?php if ($total_products > 0) { ?>
+                  <?php foreach ($products_list as $row) { ?>
                     <tr>
                       <td><input type="checkbox" class="form-check-input row-select-check"></td>
                       <td>
@@ -223,7 +251,16 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
                       </td>
                       <td>
                         <div class="d-flex gap-1">
-                          <a href="products.php?delete_id=<?= $row['id'] ?>" class="btn btn-sm btn-outline-danger py-1 px-2" onclick="return confirm('Are you sure you want to delete this product?');" title="Delete product">
+                          <!-- View Button (Modal Trigger) -->
+                          <button type="button" class="btn btn-sm btn-outline-primary py-1 px-2" data-bs-toggle="modal" data-bs-target="#viewProductModal<?= $row['id'] ?>" title="View Product Details">
+                            <i class="bi bi-eye"></i>
+                          </button>
+                          <!-- Edit Button -->
+                          <a href="product-edit.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-outline-dark py-1 px-2" title="Edit Product">
+                            <i class="bi bi-pencil"></i>
+                          </a>
+                          <!-- Delete Button -->
+                          <a href="products.php?delete_id=<?= $row['id'] ?>" class="btn btn-sm btn-outline-danger py-1 px-2" onclick="return confirm('Are you sure you want to delete this product: <?= htmlspecialchars(addslashes($row['name'])) ?>?');" title="Delete product">
                             <i class="bi bi-trash"></i>
                           </a>
                         </div>
@@ -250,6 +287,122 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
             <span class="small text-muted">Showing <strong><?= $total_products ?></strong> products</span>
           </div>
         </div>
+
+        <!-- Product View Modals -->
+        <?php if ($total_products > 0) { ?>
+          <?php foreach ($products_list as $row) { ?>
+            <div class="modal fade" id="viewProductModal<?= $row['id'] ?>" tabindex="-1" aria-labelledby="viewModalLabel<?= $row['id'] ?>" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content border-0 shadow">
+                  <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fs-6 fw-bold" id="viewModalLabel<?= $row['id'] ?>">
+                      <i class="bi bi-box-seam me-2"></i><?= htmlspecialchars($row['name']) ?>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body p-4">
+                    <div class="row g-4">
+                      <!-- Product Image & Quick Badges -->
+                      <div class="col-md-5 text-center">
+                        <?php if (!empty($row['image_url'])) { ?>
+                          <img src="<?= htmlspecialchars($row['image_url']) ?>" class="img-fluid rounded border shadow-sm w-100 mb-3" style="max-height: 280px; object-fit: cover;" alt="<?= htmlspecialchars($row['name']) ?>">
+                        <?php } else { ?>
+                          <div class="rounded bg-light border d-flex flex-column align-items-center justify-content-center text-muted mb-3" style="height: 250px;">
+                            <i class="bi bi-image fs-1 mb-2 opacity-50"></i>
+                            <small>No image uploaded</small>
+                          </div>
+                        <?php } ?>
+                        
+                        <div class="d-flex flex-wrap gap-1 justify-content-center">
+                          <span class="badge bg-dark">SKU: <?= htmlspecialchars($row['sku']) ?></span>
+                          <span class="badge bg-secondary"><?= htmlspecialchars($row['status']) ?></span>
+                          <?php if (!empty($row['is_sale'])) { ?>
+                            <span class="badge bg-danger">ON SALE</span>
+                          <?php } ?>
+                          <?php if (!empty($row['is_new'])) { ?>
+                            <span class="badge bg-success">NEW ARRIVAL</span>
+                          <?php } ?>
+                        </div>
+                      </div>
+                      
+                      <!-- Product Specs & Details -->
+                      <div class="col-md-7">
+                        <h4 class="fw-bold mb-1"><?= htmlspecialchars($row['name']) ?></h4>
+                        <div class="text-muted small mb-3">
+                          <span><strong>Brand:</strong> <?= htmlspecialchars($row['brand_name'] ?? 'No Brand') ?></span> &bull; 
+                          <span><strong>Category:</strong> <?= htmlspecialchars($row['category_name'] ?? 'Uncategorized') ?></span>
+                        </div>
+
+                        <!-- Price & Stock Highlights -->
+                        <div class="p-3 bg-light rounded border mb-3">
+                          <div class="row text-center">
+                            <div class="col-4 border-end">
+                              <div class="text-muted small">Selling Price</div>
+                              <div class="fw-bold text-dark fs-6">PKR <?= number_format($row['price_pkr']) ?></div>
+                            </div>
+                            <div class="col-4 border-end">
+                              <div class="text-muted small">Retail Price</div>
+                              <div class="text-muted small"><?= !empty($row['original_price_pkr']) ? 'PKR ' . number_format($row['original_price_pkr']) : '-' ?></div>
+                            </div>
+                            <div class="col-4">
+                              <div class="text-muted small">Stock Level</div>
+                              <div class="fw-bold text-success fs-6"><?= $row['stock_quantity'] ?> pairs</div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Attributes Table -->
+                        <table class="table table-sm table-bordered small mb-3">
+                          <tbody>
+                            <tr>
+                              <th class="bg-light" style="width: 38%;">Upper Material</th>
+                              <td><?= !empty($row['material']) ? htmlspecialchars($row['material']) : '<span class="text-muted">Not specified</span>' ?></td>
+                            </tr>
+                            <tr>
+                              <th class="bg-light">Sole Construction</th>
+                              <td><?= !empty($row['sole_type']) ? htmlspecialchars($row['sole_type']) : '<span class="text-muted">Not specified</span>' ?></td>
+                            </tr>
+                            <tr>
+                              <th class="bg-light">Occasion</th>
+                              <td><?= !empty($row['occasion']) ? htmlspecialchars($row['occasion']) : '<span class="text-muted">Not specified</span>' ?></td>
+                            </tr>
+                            <?php if (!empty($row['cost_price_pkr'])) { ?>
+                            <tr>
+                              <th class="bg-light">Cost Price (Internal)</th>
+                              <td>PKR <?= number_format($row['cost_price_pkr']) ?></td>
+                            </tr>
+                            <?php } ?>
+                          </tbody>
+                        </table>
+
+                        <?php if (!empty($row['short_description'])) { ?>
+                          <div class="mb-2">
+                            <div class="fw-bold small text-muted">Short Description:</div>
+                            <p class="small text-secondary mb-0"><?= nl2br(htmlspecialchars($row['short_description'])) ?></p>
+                          </div>
+                        <?php } ?>
+
+                        <?php if (!empty($row['description'])) { ?>
+                          <div class="mb-2">
+                            <div class="fw-bold small text-muted">Craftsmanship Details:</div>
+                            <p class="small text-secondary mb-0" style="max-height: 100px; overflow-y: auto;"><?= nl2br(htmlspecialchars($row['description'])) ?></p>
+                          </div>
+                        <?php } ?>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="product-edit.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-dark">
+                      <i class="bi bi-pencil me-1"></i> Edit Product
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <?php } ?>
+        <?php } ?>
       
       </main>
     </div>
