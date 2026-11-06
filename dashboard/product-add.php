@@ -1,3 +1,14 @@
+<?php
+require_once __DIR__ . "/configs/session_check.php";
+require_once __DIR__ . "/configs/db_con.php";
+
+$error_msg = $_SESSION['error_msg'] ?? "";
+$success_msg = $_SESSION['success_msg'] ?? "";
+unset($_SESSION['error_msg'], $_SESSION['success_msg']);
+
+$get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY name ASC");
+$get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC");
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -82,7 +93,22 @@
       </a>
     </div>
 
-    <form class="admin-demo-form" data-success-msg="New footwear model recorded successfully in demo catalog!">
+    <!-- Alerts -->
+    <?php if (!empty($success_msg)) { ?>
+      <div class="alert alert-success py-2 mb-3">
+        <i class="bi bi-check-circle me-1"></i> <?= $success_msg ?>
+      </div>
+      <?php unset($success_msg); ?>
+    <?php } ?>
+
+    <?php if (!empty($error_msg)) { ?>
+      <div class="alert alert-danger py-2 mb-3">
+        <i class="bi bi-exclamation-triangle me-1"></i> <?= $error_msg ?>
+      </div>
+      <?php unset($error_msg); ?>
+    <?php } ?>
+
+    <form action="actions_handle/product_add_handle.php" method="POST" enctype="multipart/form-data">
       <div class="row g-4">
         
         <!-- Left Column: Primary Details -->
@@ -95,41 +121,37 @@
               <div class="row g-3">
                 <div class="col-md-8">
                   <label class="form-label small fw-bold">Product Name *</label>
-                  <input type="text" class="form-control" placeholder="e.g. Royal Cap-Toe Oxford in Mahogany" required>
+                  <input type="text" name="name" class="form-control" placeholder="e.g. Royal Cap-Toe Oxford in Mahogany" required>
                 </div>
                 <div class="col-md-4">
                   <label class="form-label small fw-bold">SKU Code *</label>
-                  <input type="text" class="form-control" placeholder="NF-OXF-25" required>
+                  <input type="text" name="sku" class="form-control" placeholder="NF-OXF-25" required>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label small fw-bold">Category *</label>
-                  <select class="form-select" required>
-                    <option selected>Formal Shoes</option>
-                    <option>Loafers</option>
-                    <option>Casual Shoes</option>
-                    <option>Sneakers / Sports Shoes</option>
-                    <option>Sandals</option>
-                    <option>Traditional Footwear</option>
-                    <option>Slippers</option>
-                    <option>Boots</option>
+                  <select name="category_id" class="form-select" required>
+                    <option value="">Select Category</option>
+                    <?php foreach ($get_categories as $cat) { ?>
+                      <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
+                    <?php } ?>
                   </select>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label small fw-bold">Atelier Brand *</label>
-                  <select class="form-select" required>
-                    <option selected>NOVA FORM Black Label</option>
-                    <option>NOVA FORM Artisan</option>
-                    <option>NOVA FORM Heritage</option>
-                    <option>NOVA FORM Urban</option>
+                  <select name="brand_id" class="form-select" required>
+                    <option value="">Select Brand</option>
+                    <?php foreach ($get_brands as $brand) { ?>
+                      <option value="<?= $brand['id'] ?>"><?= htmlspecialchars($brand['name']) ?></option>
+                    <?php } ?>
                   </select>
                 </div>
                 <div class="col-12">
                   <label class="form-label small fw-bold">Short Silhouette Description</label>
-                  <textarea class="form-control" rows="2" placeholder="Brief editorial note displayed on product card..."></textarea>
+                  <textarea name="short_description" class="form-control" rows="2" placeholder="Brief editorial note displayed on product card..."></textarea>
                 </div>
                 <div class="col-12">
                   <label class="form-label small fw-bold">Full Craftsmanship Description</label>
-                  <textarea class="form-control" rows="4" placeholder="Detail the leather tanning, last shape, and resoling properties..."></textarea>
+                  <textarea name="description" class="form-control" rows="4" placeholder="Detail the leather tanning, last shape, and resoling properties..."></textarea>
                 </div>
               </div>
             </div>
@@ -142,15 +164,15 @@
               <div class="row g-3">
                 <div class="col-md-4">
                   <label class="form-label small fw-bold">Selling Price (PKR) *</label>
-                  <input type="number" class="form-control" placeholder="14999" required>
+                  <input type="number" step="0.01" name="price_pkr" class="form-control" placeholder="14999" required>
                 </div>
                 <div class="col-md-4">
                   <label class="form-label small fw-bold">Original / Retail Price (PKR)</label>
-                  <input type="number" class="form-control" placeholder="17500">
+                  <input type="number" step="0.01" name="original_price_pkr" class="form-control" placeholder="17500">
                 </div>
                 <div class="col-md-4">
                   <label class="form-label small fw-bold">Cost of Goods (Internal PKR)</label>
-                  <input type="number" class="form-control" placeholder="6500">
+                  <input type="number" step="0.01" name="cost_price_pkr" class="form-control" placeholder="6500">
                 </div>
               </div>
             </div>
@@ -253,11 +275,11 @@
           <div class="admin-card mb-4">
             <div class="admin-card-header"><h5 class="admin-card-title">Product Imagery</h5></div>
             <div class="admin-card-body text-center">
-              <div class="img-upload-box mb-3" onclick="document.getElementById('fileInputProd').click();">
+              <div class="img-upload-box mb-3" onclick="document.getElementById('fileInputProd').click();" style="cursor: pointer;">
                 <i class="bi bi-cloud-arrow-up display-5 text-muted mb-2 d-inline-block"></i>
                 <div class="fw-semibold small">Click or drag images to upload</div>
                 <div class="text-muted" style="font-size: 0.72rem;">PNG, JPG up to 5MB (Square 1:1 recommended)</div>
-                <input type="file" id="fileInputProd" class="d-none product-image-input" data-preview-target="imagePreviewContainer" accept="image/*">
+                <input type="file" name="product_image" id="fileInputProd" class="d-none product-image-input" data-preview-target="imagePreviewContainer" accept="image/*" required>
               </div>
 
               <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2 justify-content-center">
@@ -272,15 +294,15 @@
             <div class="admin-card-body">
               <div class="mb-3">
                 <label class="form-label small fw-bold">Upper Material</label>
-                <input type="text" class="form-control form-control-sm" value="Full Grain Italian Calfskin">
+                <input type="text" name="material" class="form-control form-control-sm" value="Full Grain Italian Calfskin">
               </div>
               <div class="mb-3">
                 <label class="form-label small fw-bold">Sole Construction</label>
-                <input type="text" class="form-control form-control-sm" value="Goodyear Welted Closed-Channel Leather">
+                <input type="text" name="sole_type" class="form-control form-control-sm" value="Goodyear Welted Closed-Channel Leather">
               </div>
               <div class="mb-3">
                 <label class="form-label small fw-bold">Occasion</label>
-                <input type="text" class="form-control form-control-sm" value="Formal Boardrooms, Black Tie">
+                <input type="text" name="occasion" class="form-control form-control-sm" value="Formal Boardrooms, Black Tie">
               </div>
             </div>
           </div>
@@ -291,27 +313,27 @@
             <div class="admin-card-body">
               <div class="mb-3">
                 <label class="form-label small fw-bold">Status</label>
-                <select class="form-select form-select-sm">
-                  <option selected>Active (Visible in Store)</option>
-                  <option>Draft</option>
-                  <option>Archived</option>
+                <select name="status" class="form-select form-select-sm">
+                  <option value="Active" selected>Active (Visible in Store)</option>
+                  <option value="Draft">Draft</option>
+                  <option value="Archived">Archived</option>
                 </select>
               </div>
 
               <div class="form-check mb-2">
-                <input class="form-check-input" type="checkbox" id="flagFeatured" checked>
+                <input class="form-check-input" type="checkbox" name="is_featured" value="1" id="flagFeatured" checked>
                 <label class="form-check-label small" for="flagFeatured">Feature on Homepage</label>
               </div>
               <div class="form-check mb-2">
-                <input class="form-check-input" type="checkbox" id="flagBestSeller" checked>
+                <input class="form-check-input" type="checkbox" name="is_bestseller" value="1" id="flagBestSeller" checked>
                 <label class="form-check-label small" for="flagBestSeller">Best Seller Badge</label>
               </div>
               <div class="form-check mb-2">
-                <input class="form-check-input" type="checkbox" id="flagNewArrival">
+                <input class="form-check-input" type="checkbox" name="is_new" value="1" id="flagNewArrival">
                 <label class="form-check-label small" for="flagNewArrival">New Arrival Tag</label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="flagOnSale">
+                <input class="form-check-input" type="checkbox" name="is_sale" value="1" id="flagOnSale">
                 <label class="form-check-label small" for="flagOnSale">Show On Sale</label>
               </div>
             </div>
@@ -319,7 +341,7 @@
 
           <!-- Action Buttons -->
           <div class="d-flex flex-column gap-2">
-            <button type="submit" class="btn btn-dark w-100 py-2"><i class="bi bi-check-lg me-1"></i> Save Footwear Model</button>
+            <button type="submit" name="add_product" class="btn btn-dark w-100 py-2"><i class="bi bi-check-lg me-1"></i> Save Footwear Model</button>
             <button type="button" class="btn btn-outline-secondary w-100" onclick="alert('Saved as draft');">Save As Draft</button>
           </div>
 
