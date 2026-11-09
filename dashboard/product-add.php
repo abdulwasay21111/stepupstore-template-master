@@ -181,84 +181,87 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
           <!-- Variants Matrix -->
           <div class="admin-card mb-4">
             <div class="admin-card-header d-flex justify-content-between align-items-center">
-              <h5 class="admin-card-title">3. Size EU 39–46 Variant Inventory</h5>
-              <button type="button" class="btn btn-sm btn-outline-dark" onclick="alert('Added sample variant row');">+ Add Variant</button>
+              <div>
+                <h5 class="admin-card-title mb-0">3. Size EU 39–46 Variant Inventory</h5>
+                <small class="text-muted">Variants are stored directly in products table</small>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-dark" onclick="addVariantRow()">+ Add Variant</button>
             </div>
             <div class="admin-card-body p-0">
               <table class="table variant-table table-bordered mb-0 small">
                 <thead class="table-light">
                   <tr>
-                    <th>Shoe Size</th>
+                    <th style="width: 120px;">Shoe Size</th>
                     <th>Colorway</th>
                     <th>Variant SKU</th>
-                    <th>Stock Qty</th>
-                    <th>Action</th>
+                    <th style="width: 100px;">Stock Qty</th>
+                    <th style="width: 60px;">Action</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="variantsTableBody">
                   
                     <tr>
-                      <td><strong>EU 39</strong></td>
-                      <td><input type="text" class="form-control form-control-sm" value="Nero Black"></td>
-                      <td><code>NF-OXF-25-39</code></td>
-                      <td><input type="number" class="form-control form-control-sm" value="4" style="width: 80px;"></td>
-                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0"><i class="bi bi-trash"></i></button></td>
+                      <td><input type="text" name="variant_size[]" class="form-control form-control-sm fw-bold" value="EU 39"></td>
+                      <td><input type="text" name="variant_color[]" class="form-control form-control-sm" value="Nero Black"></td>
+                      <td><input type="text" name="variant_sku[]" class="form-control form-control-sm" value="NF-OXF-25-39"></td>
+                      <td><input type="number" name="variant_stock[]" class="form-control form-control-sm" value="4" min="0"></td>
+                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeVariantRow(this)"><i class="bi bi-trash"></i></button></td>
                     </tr>
                   
                     <tr>
-                      <td><strong>EU 40</strong></td>
-                      <td><input type="text" class="form-control form-control-sm" value="Nero Black"></td>
-                      <td><code>NF-OXF-25-40</code></td>
-                      <td><input type="number" class="form-control form-control-sm" value="4" style="width: 80px;"></td>
-                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0"><i class="bi bi-trash"></i></button></td>
+                      <td><input type="text" name="variant_size[]" class="form-control form-control-sm fw-bold" value="EU 40"></td>
+                      <td><input type="text" name="variant_color[]" class="form-control form-control-sm" value="Nero Black"></td>
+                      <td><input type="text" name="variant_sku[]" class="form-control form-control-sm" value="NF-OXF-25-40"></td>
+                      <td><input type="number" name="variant_stock[]" class="form-control form-control-sm" value="4" min="0"></td>
+                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeVariantRow(this)"><i class="bi bi-trash"></i></button></td>
                     </tr>
                   
                     <tr>
-                      <td><strong>EU 41</strong></td>
-                      <td><input type="text" class="form-control form-control-sm" value="Nero Black"></td>
-                      <td><code>NF-OXF-25-41</code></td>
-                      <td><input type="number" class="form-control form-control-sm" value="4" style="width: 80px;"></td>
-                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0"><i class="bi bi-trash"></i></button></td>
+                      <td><input type="text" name="variant_size[]" class="form-control form-control-sm fw-bold" value="EU 41"></td>
+                      <td><input type="text" name="variant_color[]" class="form-control form-control-sm" value="Nero Black"></td>
+                      <td><input type="text" name="variant_sku[]" class="form-control form-control-sm" value="NF-OXF-25-41"></td>
+                      <td><input type="number" name="variant_stock[]" class="form-control form-control-sm" value="4" min="0"></td>
+                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeVariantRow(this)"><i class="bi bi-trash"></i></button></td>
                     </tr>
                   
                     <tr>
-                      <td><strong>EU 42</strong></td>
-                      <td><input type="text" class="form-control form-control-sm" value="Nero Black"></td>
-                      <td><code>NF-OXF-25-42</code></td>
-                      <td><input type="number" class="form-control form-control-sm" value="8" style="width: 80px;"></td>
-                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0"><i class="bi bi-trash"></i></button></td>
+                      <td><input type="text" name="variant_size[]" class="form-control form-control-sm fw-bold" value="EU 42"></td>
+                      <td><input type="text" name="variant_color[]" class="form-control form-control-sm" value="Nero Black"></td>
+                      <td><input type="text" name="variant_sku[]" class="form-control form-control-sm" value="NF-OXF-25-42"></td>
+                      <td><input type="number" name="variant_stock[]" class="form-control form-control-sm" value="8" min="0"></td>
+                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeVariantRow(this)"><i class="bi bi-trash"></i></button></td>
                     </tr>
                   
                     <tr>
-                      <td><strong>EU 43</strong></td>
-                      <td><input type="text" class="form-control form-control-sm" value="Nero Black"></td>
-                      <td><code>NF-OXF-25-43</code></td>
-                      <td><input type="number" class="form-control form-control-sm" value="8" style="width: 80px;"></td>
-                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0"><i class="bi bi-trash"></i></button></td>
+                      <td><input type="text" name="variant_size[]" class="form-control form-control-sm fw-bold" value="EU 43"></td>
+                      <td><input type="text" name="variant_color[]" class="form-control form-control-sm" value="Nero Black"></td>
+                      <td><input type="text" name="variant_sku[]" class="form-control form-control-sm" value="NF-OXF-25-43"></td>
+                      <td><input type="number" name="variant_stock[]" class="form-control form-control-sm" value="8" min="0"></td>
+                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeVariantRow(this)"><i class="bi bi-trash"></i></button></td>
                     </tr>
                   
                     <tr>
-                      <td><strong>EU 44</strong></td>
-                      <td><input type="text" class="form-control form-control-sm" value="Nero Black"></td>
-                      <td><code>NF-OXF-25-44</code></td>
-                      <td><input type="number" class="form-control form-control-sm" value="4" style="width: 80px;"></td>
-                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0"><i class="bi bi-trash"></i></button></td>
+                      <td><input type="text" name="variant_size[]" class="form-control form-control-sm fw-bold" value="EU 44"></td>
+                      <td><input type="text" name="variant_color[]" class="form-control form-control-sm" value="Nero Black"></td>
+                      <td><input type="text" name="variant_sku[]" class="form-control form-control-sm" value="NF-OXF-25-44"></td>
+                      <td><input type="number" name="variant_stock[]" class="form-control form-control-sm" value="4" min="0"></td>
+                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeVariantRow(this)"><i class="bi bi-trash"></i></button></td>
                     </tr>
                   
                     <tr>
-                      <td><strong>EU 45</strong></td>
-                      <td><input type="text" class="form-control form-control-sm" value="Nero Black"></td>
-                      <td><code>NF-OXF-25-45</code></td>
-                      <td><input type="number" class="form-control form-control-sm" value="4" style="width: 80px;"></td>
-                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0"><i class="bi bi-trash"></i></button></td>
+                      <td><input type="text" name="variant_size[]" class="form-control form-control-sm fw-bold" value="EU 45"></td>
+                      <td><input type="text" name="variant_color[]" class="form-control form-control-sm" value="Nero Black"></td>
+                      <td><input type="text" name="variant_sku[]" class="form-control form-control-sm" value="NF-OXF-25-45"></td>
+                      <td><input type="number" name="variant_stock[]" class="form-control form-control-sm" value="4" min="0"></td>
+                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeVariantRow(this)"><i class="bi bi-trash"></i></button></td>
                     </tr>
                   
                     <tr>
-                      <td><strong>EU 46</strong></td>
-                      <td><input type="text" class="form-control form-control-sm" value="Nero Black"></td>
-                      <td><code>NF-OXF-25-46</code></td>
-                      <td><input type="number" class="form-control form-control-sm" value="4" style="width: 80px;"></td>
-                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0"><i class="bi bi-trash"></i></button></td>
+                      <td><input type="text" name="variant_size[]" class="form-control form-control-sm fw-bold" value="EU 46"></td>
+                      <td><input type="text" name="variant_color[]" class="form-control form-control-sm" value="Nero Black"></td>
+                      <td><input type="text" name="variant_sku[]" class="form-control form-control-sm" value="NF-OXF-25-46"></td>
+                      <td><input type="number" name="variant_stock[]" class="form-control form-control-sm" value="4" min="0"></td>
+                      <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeVariantRow(this)"><i class="bi bi-trash"></i></button></td>
                     </tr>
                   
                 </tbody>
@@ -373,5 +376,32 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/dashboard.js"></script>
+  <script>
+    function addVariantRow() {
+      var tbody = document.getElementById('variantsTableBody');
+      var rowCount = tbody.querySelectorAll('tr').length + 39;
+      var sizeName = 'EU ' + rowCount;
+      var baseSkuInput = document.querySelector('input[name="sku"]');
+      var baseSku = baseSkuInput && baseSkuInput.value.trim() ? baseSkuInput.value.trim() : 'NF-OXF-25';
+      var variantSku = baseSku + '-' + rowCount;
+
+      var tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="text" name="variant_size[]" class="form-control form-control-sm fw-bold" value="${sizeName}"></td>
+        <td><input type="text" name="variant_color[]" class="form-control form-control-sm" value="Nero Black"></td>
+        <td><input type="text" name="variant_sku[]" class="form-control form-control-sm" value="${variantSku}"></td>
+        <td><input type="number" name="variant_stock[]" class="form-control form-control-sm" value="4" min="0"></td>
+        <td><button type="button" class="btn btn-sm btn-link text-danger p-0" onclick="removeVariantRow(this)"><i class="bi bi-trash"></i></button></td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    function removeVariantRow(btn) {
+      var tr = btn.closest('tr');
+      if (tr) {
+        tr.remove();
+      }
+    }
+  </script>
 </body>
 </html>

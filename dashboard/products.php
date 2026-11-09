@@ -59,6 +59,15 @@ if ($get_products) {
 }
 $total_products = count($products_list);
 
+// Product variants table se fetch krna
+$all_pv_res = mysqli_query($connection, "SELECT * FROM product_variants ORDER BY id ASC");
+$pv_by_product = [];
+if ($all_pv_res) {
+    while ($pv_row = mysqli_fetch_assoc($all_pv_res)) {
+        $pv_by_product[$pv_row['product_id']][] = $pv_row;
+    }
+}
+
 $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY name ASC");
 $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC");
 ?>
@@ -212,6 +221,7 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
                   <th>Category</th>
                   <th>Brand</th>
                   <th>Selling Price</th>
+                  <th>Variants (Sizes)</th>
                   <th>Stock</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -242,6 +252,35 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
                       <td><span class="badge bg-light text-dark border"><?= htmlspecialchars($row['brand_name'] ?? 'No Brand') ?></span></td>
                       <td class="fw-bold">PKR <?= number_format($row['price_pkr']) ?></td>
                       <td>
+                        <?php 
+                        $db_vars = $pv_by_product[$row['id']] ?? [];
+                        if (!empty($db_vars)) {
+                            echo '<div class="d-flex flex-wrap gap-1" style="max-width: 220px;">';
+                            foreach ($db_vars as $v) {
+                                $v_size = htmlspecialchars($v['size_eu']);
+                                $v_stock = intval($v['stock_quantity']);
+                                $v_color = htmlspecialchars($v['color_name']);
+                                echo "<span class='badge bg-light text-dark border' style='font-size: 0.72rem;' title='Color: {$v_color} | Stock: {$v_stock} pairs'>{$v_size} <span class='text-muted'>({$v_stock})</span></span>";
+                            }
+                            echo '</div>';
+                        } else {
+                            $v_list = !empty($row['variants']) ? json_decode($row['variants'], true) : [];
+                            if (!empty($v_list) && is_array($v_list)) {
+                                echo '<div class="d-flex flex-wrap gap-1" style="max-width: 220px;">';
+                                foreach ($v_list as $v) {
+                                    $v_size = htmlspecialchars($v['size'] ?? '');
+                                    $v_stock = intval($v['stock'] ?? 0);
+                                    $v_color = htmlspecialchars($v['color'] ?? '');
+                                    echo "<span class='badge bg-light text-dark border' style='font-size: 0.72rem;' title='Color: {$v_color} | Stock: {$v_stock} pairs'>{$v_size} <span class='text-muted'>({$v_stock})</span></span>";
+                                }
+                                echo '</div>';
+                            } else {
+                                echo "<span class='text-muted small'>Standard</span>";
+                            }
+                        }
+                        ?>
+                      </td>
+                      <td>
                         <span class="badge bg-light text-dark border">
                           <?= $row['stock_quantity'] ?> pairs
                         </span>
@@ -269,7 +308,7 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
                   <?php } ?>
                 <?php } else { ?>
                   <tr>
-                    <td colspan="9" class="text-center py-5 text-muted">
+                    <td colspan="10" class="text-center py-5 text-muted">
                       <i class="bi bi-box-seam fs-1 d-block mb-2 text-secondary opacity-50"></i>
                       <p class="mb-2 fw-semibold">No products found in database.</p>
                       <a href="product-add.php" class="btn btn-sm btn-dark">
@@ -374,6 +413,69 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY name ASC"
                             <?php } ?>
                           </tbody>
                         </table>
+
+                        <!-- Variants Breakdown -->
+                        <?php 
+                        $db_modal_variants = $pv_by_product[$row['id']] ?? [];
+                        if (!empty($db_modal_variants)) {
+                        ?>
+                          <div class="mb-3">
+                            <div class="fw-bold small text-muted mb-2">Variant Sizes & Stock Breakdown:</div>
+                            <div class="table-responsive">
+                              <table class="table table-sm table-bordered small text-center mb-0">
+                                <thead class="table-light">
+                                  <tr>
+                                    <th>Size</th>
+                                    <th>Color</th>
+                                    <th>Variant SKU</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <?php foreach ($db_modal_variants as $mv) { ?>
+                                    <tr>
+                                      <td class="fw-bold"><?= htmlspecialchars($mv['size_eu'] ?? '') ?></td>
+                                      <td><?= htmlspecialchars($mv['color_name'] ?? '-') ?></td>
+                                      <td><code><?= htmlspecialchars($mv['sku_variant'] ?? '-') ?></code></td>
+                                      <td class="fw-bold text-success"><?= intval($mv['stock_quantity'] ?? 0) ?> pairs</td>
+                                      <td><span class="badge bg-light text-dark border"><?= htmlspecialchars($mv['status'] ?? 'In Stock') ?></span></td>
+                                    </tr>
+                                  <?php } ?>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        <?php } elseif (!empty($row['variants'])) { 
+                          $modal_variants = json_decode($row['variants'], true);
+                          if (!empty($modal_variants) && is_array($modal_variants)) {
+                        ?>
+                          <div class="mb-3">
+                            <div class="fw-bold small text-muted mb-2">Variant Sizes & Stock Breakdown:</div>
+                            <div class="table-responsive">
+                              <table class="table table-sm table-bordered small text-center mb-0">
+                                <thead class="table-light">
+                                  <tr>
+                                    <th>Size</th>
+                                    <th>Color</th>
+                                    <th>Variant SKU</th>
+                                    <th>Stock</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <?php foreach ($modal_variants as $mv) { ?>
+                                    <tr>
+                                      <td class="fw-bold"><?= htmlspecialchars($mv['size'] ?? '') ?></td>
+                                      <td><?= htmlspecialchars($mv['color'] ?? '-') ?></td>
+                                      <td><code><?= htmlspecialchars($mv['sku'] ?? '-') ?></code></td>
+                                      <td class="fw-bold text-success"><?= intval($mv['stock'] ?? 0) ?> pairs</td>
+                                    </tr>
+                                  <?php } ?>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        <?php } } ?>
 
                         <?php if (!empty($row['short_description'])) { ?>
                           <div class="mb-2">
