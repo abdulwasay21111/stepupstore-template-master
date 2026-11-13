@@ -87,7 +87,7 @@ $get_brands = mysqli_query($connection, "SELECT * FROM brands ORDER BY id DESC")
         </div>
 
         <div class="topbar-actions">
-          <a href="../front-site/index.html" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
+          <a href="../front-site/index.php" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
             <i class="bi bi-eye"></i> View Site
           </a>
           

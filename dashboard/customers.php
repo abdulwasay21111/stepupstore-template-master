@@ -32,7 +32,7 @@
       </div>
 
       <div class="topbar-actions">
-        <a href="../front-site/index.html" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
+        <a href="../front-site/index.php" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
           <i class="bi bi-eye"></i> View Site
         </a>
         
@@ -43,11 +43,11 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 280px;">
             <li><h6 class="dropdown-header text-uppercase small fw-bold">Recent Alerts</h6></li>
-            <li><a class="dropdown-item small py-2" href="orders.html"><i class="bi bi-bag-check text-success me-2"></i> New Order #NF-88291 received (PKR 14,999)</a></li>
-            <li><a class="dropdown-item small py-2" href="inventory.html"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock: Sahara Suede Chukka (9 left)</a></li>
-            <li><a class="dropdown-item small py-2" href="reviews.html"><i class="bi bi-star text-primary me-2"></i> New 5-star review pending approval</a></li>
+            <li><a class="dropdown-item small py-2" href="orders.php"><i class="bi bi-bag-check text-success me-2"></i> New Order #NF-88291 received (PKR 14,999)</a></li>
+            <li><a class="dropdown-item small py-2" href="inventory.php"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock: Sahara Suede Chukka (9 left)</a></li>
+            <li><a class="dropdown-item small py-2" href="reviews.php"><i class="bi bi-star text-primary me-2"></i> New 5-star review pending approval</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.html">View All Notifications</a></li>
+            <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.php">View All Notifications</a></li>
           </ul>
         </div>
 
@@ -60,10 +60,10 @@
             </div>
           </a>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-            <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
-            <li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
+            <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
+            <li><a class="dropdown-item" href="settings.php"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+            <li><a class="dropdown-item text-danger" href="login.php"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
           </ul>
         </div>
       </div>
@@ -100,7 +100,7 @@
             
               <tr>
                 <td><code>CUST-901</code></td>
-                <td><strong class="text-dark"><a href="customer-details.html" class="text-dark">Hamza Tariq</a></strong></td>
+                <td><strong class="text-dark"><a href="customer-details.php" class="text-dark">Hamza Tariq</a></strong></td>
                 <td>
                   <div>hamza.tariq@gmail.com</div>
                   <small class="text-muted">+92 300 8472911</small>
@@ -111,13 +111,13 @@
                 <td class="small text-muted">Jan 12, 2026</td>
                 <td><span class="badge-status badge-status-success">Active</span></td>
                 <td>
-                  <a href="customer-details.html" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
+                  <a href="customer-details.php" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
                 </td>
               </tr>
             
               <tr>
                 <td><code>CUST-902</code></td>
-                <td><strong class="text-dark"><a href="customer-details.html" class="text-dark">Bilal Rehman</a></strong></td>
+                <td><strong class="text-dark"><a href="customer-details.php" class="text-dark">Bilal Rehman</a></strong></td>
                 <td>
                   <div>bilal.rehman@live.com</div>
                   <small class="text-muted">+92 321 4455821</small>
@@ -128,13 +128,13 @@
                 <td class="small text-muted">Feb 04, 2026</td>
                 <td><span class="badge-status badge-status-success">Active</span></td>
                 <td>
-                  <a href="customer-details.html" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
+                  <a href="customer-details.php" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
                 </td>
               </tr>
             
               <tr>
                 <td><code>CUST-903</code></td>
-                <td><strong class="text-dark"><a href="customer-details.html" class="text-dark">Daniyal Sheikh</a></strong></td>
+                <td><strong class="text-dark"><a href="customer-details.php" class="text-dark">Daniyal Sheikh</a></strong></td>
                 <td>
                   <div>daniyal.sheikh@outlook.com</div>
                   <small class="text-muted">+92 333 5129988</small>
@@ -145,13 +145,13 @@
                 <td class="small text-muted">Mar 18, 2026</td>
                 <td><span class="badge-status badge-status-success">Active</span></td>
                 <td>
-                  <a href="customer-details.html" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
+                  <a href="customer-details.php" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
                 </td>
               </tr>
             
               <tr>
                 <td><code>CUST-904</code></td>
-                <td><strong class="text-dark"><a href="customer-details.html" class="text-dark">Usman Ghani</a></strong></td>
+                <td><strong class="text-dark"><a href="customer-details.php" class="text-dark">Usman Ghani</a></strong></td>
                 <td>
                   <div>usman.ghani@yahoo.com</div>
                   <small class="text-muted">+92 345 7788112</small>
@@ -162,13 +162,13 @@
                 <td class="small text-muted">Apr 02, 2026</td>
                 <td><span class="badge-status badge-status-success">Active</span></td>
                 <td>
-                  <a href="customer-details.html" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
+                  <a href="customer-details.php" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
                 </td>
               </tr>
             
               <tr>
                 <td><code>CUST-905</code></td>
-                <td><strong class="text-dark"><a href="customer-details.html" class="text-dark">Zain Ul Abideen</a></strong></td>
+                <td><strong class="text-dark"><a href="customer-details.php" class="text-dark">Zain Ul Abideen</a></strong></td>
                 <td>
                   <div>zain.abideen@gmail.com</div>
                   <small class="text-muted">+92 301 9922334</small>
@@ -179,13 +179,13 @@
                 <td class="small text-muted">May 15, 2026</td>
                 <td><span class="badge-status badge-status-success">Active</span></td>
                 <td>
-                  <a href="customer-details.html" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
+                  <a href="customer-details.php" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
                 </td>
               </tr>
             
               <tr>
                 <td><code>CUST-906</code></td>
-                <td><strong class="text-dark"><a href="customer-details.html" class="text-dark">Shahmeer Khan</a></strong></td>
+                <td><strong class="text-dark"><a href="customer-details.php" class="text-dark">Shahmeer Khan</a></strong></td>
                 <td>
                   <div>shahmeer.k@gmail.com</div>
                   <small class="text-muted">+92 312 8844119</small>
@@ -196,13 +196,13 @@
                 <td class="small text-muted">Jun 22, 2026</td>
                 <td><span class="badge-status badge-status-success">Active</span></td>
                 <td>
-                  <a href="customer-details.html" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
+                  <a href="customer-details.php" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
                 </td>
               </tr>
             
               <tr>
                 <td><code>CUST-907</code></td>
-                <td><strong class="text-dark"><a href="customer-details.html" class="text-dark">Omer Farooq</a></strong></td>
+                <td><strong class="text-dark"><a href="customer-details.php" class="text-dark">Omer Farooq</a></strong></td>
                 <td>
                   <div>omer.farooq@technext.pk</div>
                   <small class="text-muted">+92 302 7711228</small>
@@ -213,13 +213,13 @@
                 <td class="small text-muted">Jul 11, 2026</td>
                 <td><span class="badge-status badge-status-success">Active</span></td>
                 <td>
-                  <a href="customer-details.html" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
+                  <a href="customer-details.php" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
                 </td>
               </tr>
             
               <tr>
                 <td><code>CUST-908</code></td>
-                <td><strong class="text-dark"><a href="customer-details.html" class="text-dark">Asad Mehmood</a></strong></td>
+                <td><strong class="text-dark"><a href="customer-details.php" class="text-dark">Asad Mehmood</a></strong></td>
                 <td>
                   <div>asad.m@gmail.com</div>
                   <small class="text-muted">+92 300 1239874</small>
@@ -230,13 +230,13 @@
                 <td class="small text-muted">Aug 09, 2026</td>
                 <td><span class="badge-status badge-status-success">Active</span></td>
                 <td>
-                  <a href="customer-details.html" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
+                  <a href="customer-details.php" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
                 </td>
               </tr>
             
               <tr>
                 <td><code>CUST-909</code></td>
-                <td><strong class="text-dark"><a href="customer-details.html" class="text-dark">Waqas Ahmed</a></strong></td>
+                <td><strong class="text-dark"><a href="customer-details.php" class="text-dark">Waqas Ahmed</a></strong></td>
                 <td>
                   <div>waqas.ahmed@hotmail.com</div>
                   <small class="text-muted">+92 322 9900112</small>
@@ -247,13 +247,13 @@
                 <td class="small text-muted">Sep 01, 2026</td>
                 <td><span class="badge-status badge-status-success">Active</span></td>
                 <td>
-                  <a href="customer-details.html" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
+                  <a href="customer-details.php" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
                 </td>
               </tr>
             
               <tr>
                 <td><code>CUST-910</code></td>
-                <td><strong class="text-dark"><a href="customer-details.html" class="text-dark">Taimoor Ali</a></strong></td>
+                <td><strong class="text-dark"><a href="customer-details.php" class="text-dark">Taimoor Ali</a></strong></td>
                 <td>
                   <div>taimoor.ali@gmail.com</div>
                   <small class="text-muted">+92 334 5544332</small>
@@ -264,7 +264,7 @@
                 <td class="small text-muted">Oct 14, 2026</td>
                 <td><span class="badge-status badge-status-success">Pending Verification</span></td>
                 <td>
-                  <a href="customer-details.html" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
+                  <a href="customer-details.php" class="btn btn-sm btn-outline-dark py-1 px-2"><i class="bi bi-eye"></i> View Profile</a>
                 </td>
               </tr>
             

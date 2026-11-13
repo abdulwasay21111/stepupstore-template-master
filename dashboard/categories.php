@@ -7,11 +7,13 @@ $success_msg = $_SESSION['success_msg'] ?? "";
 unset($_SESSION['error_msg'], $_SESSION['success_msg']);
 
 // Jab Add Category form submit ho
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_category"])) {
+if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_category"])) {
     $cat_name = trim($_POST["category_name"] ?? "");
 
     if (empty($cat_name)) {
         $_SESSION['error_msg'] = "Category name is required!";
+    } elseif (!isset($_FILES["category_image"]) || $_FILES["category_image"]["error"] !== UPLOAD_ERR_OK) {
+        $_SESSION['error_msg'] = "Category image is required!";
     } else {
         $cat_name = mysqli_real_escape_string($connection, $cat_name);
 
@@ -22,12 +24,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_category"])) {
         if (mysqli_num_rows($check_result) > 0) {
             $_SESSION['error_msg'] = "Category '$cat_name' already exists!";
         } else {
-            // Database table mein insert krna
-            $insert_query = "INSERT INTO categories (name) VALUES ('$cat_name')";
-            if (mysqli_query($connection, $insert_query)) {
-                $_SESSION['success_msg'] = "Category '$cat_name' added successfully!";
+            // Image upload handling
+            $target_dir = __DIR__ . "/images/";
+            if (!is_dir($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $img_ext = strtolower(pathinfo($_FILES["category_image"]["name"], PATHINFO_EXTENSION));
+            $new_img_name = "cat_" . time() . "_" . rand(100, 999) . "." . $img_ext;
+            $target_file = $target_dir . $new_img_name;
+
+            if (move_uploaded_file($_FILES["category_image"]["tmp_name"], $target_file)) {
+                $image_path = "images/" . $new_img_name;
+                $safe_img = mysqli_real_escape_string($connection, $image_path);
+
+                // Database table mein insert krna
+                $insert_query = "INSERT INTO categories (name, image) VALUES ('$cat_name', '$safe_img')";
+                if (mysqli_query($connection, $insert_query)) {
+                    $_SESSION['success_msg'] = "Category '$cat_name' with image added successfully!";
+                } else {
+                    $_SESSION['error_msg'] = "Failed to add category: " . mysqli_error($connection);
+                }
             } else {
-                $_SESSION['error_msg'] = "Failed to add category!";
+                $_SESSION['error_msg'] = "Failed to upload category image!";
             }
         }
     }
@@ -38,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["add_category"])) {
 }
 
 // Jab Edit Category form submit ho
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["edit_category"])) {
+if (isset($_SERVER["REQUEST_METHOD"]) && $_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["edit_category"])) {
     $cat_id = intval($_POST["category_id"] ?? 0);
     $cat_name = trim($_POST["category_name"] ?? "");
 
@@ -54,8 +73,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["edit_category"])) {
         if (mysqli_num_rows($check_result) > 0) {
             $_SESSION['error_msg'] = "Category '$cat_name' already exists!";
         } else {
-            // Database table mein update krna
-            $update_query = "UPDATE categories SET name = '$cat_name' WHERE id = '$cat_id'";
+            // Check if new image was uploaded
+            if (isset($_FILES["category_image"]) && $_FILES["category_image"]["error"] === UPLOAD_ERR_OK) {
+                $target_dir = __DIR__ . "/images/";
+                if (!is_dir($target_dir)) {
+                    mkdir($target_dir, 0777, true);
+                }
+
+                $img_ext = strtolower(pathinfo($_FILES["category_image"]["name"], PATHINFO_EXTENSION));
+                $new_img_name = "cat_" . time() . "_" . rand(100, 999) . "." . $img_ext;
+                $target_file = $target_dir . $new_img_name;
+
+                if (move_uploaded_file($_FILES["category_image"]["tmp_name"], $target_file)) {
+                    $image_path = "images/" . $new_img_name;
+                    $safe_img = mysqli_real_escape_string($connection, $image_path);
+                    $update_query = "UPDATE categories SET name = '$cat_name', image = '$safe_img' WHERE id = '$cat_id'";
+                } else {
+                    $update_query = "UPDATE categories SET name = '$cat_name' WHERE id = '$cat_id'";
+                }
+            } else {
+                $update_query = "UPDATE categories SET name = '$cat_name' WHERE id = '$cat_id'";
+            }
+
             if (mysqli_query($connection, $update_query)) {
                 $_SESSION['success_msg'] = "Category updated successfully!";
             } else {
@@ -71,6 +110,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["edit_category"])) {
 // Jab Delete Category pr click ho
 if (isset($_GET["delete_id"])) {
     $delete_id = intval($_GET["delete_id"]);
+
+    // Image file delete krna if exists on disk
+    $sel_img = mysqli_query($connection, "SELECT image FROM categories WHERE id = '$delete_id'");
+    if ($img_row = mysqli_fetch_assoc($sel_img)) {
+        if (!empty($img_row['image']) && file_exists(__DIR__ . '/' . $img_row['image'])) {
+            @unlink(__DIR__ . '/' . $img_row['image']);
+        }
+    }
 
     // Database se category delete krna
     $delete_query = "DELETE FROM categories WHERE id = '$delete_id'";
@@ -121,7 +168,7 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
         </div>
 
         <div class="topbar-actions">
-          <a href="../front-site/index.html" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
+          <a href="../front-site/index.php" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
             <i class="bi bi-eye"></i> View Site
           </a>
           
@@ -188,7 +235,8 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
             <table class="admin-table">
               <thead>
                 <tr>
-                  <th style="width: 100px;">#ID</th>
+                  <th style="width: 80px;">#ID</th>
+                  <th style="width: 80px;">Image</th>
                   <th>Category Name</th>
                   <th>Created At</th>
                   <th style="width: 160px;">Action</th>
@@ -201,6 +249,15 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
                 ?>
                     <tr>
                       <td><span class="badge bg-light text-dark border">#<?= $row['id'] ?></span></td>
+                      <td>
+                        <?php if (!empty($row['image'])) { ?>
+                          <img src="<?= htmlspecialchars($row['image']) ?>" alt="<?= htmlspecialchars($row['name']) ?>" class="rounded border" style="width: 44px; height: 44px; object-fit: cover;">
+                        <?php } else { ?>
+                          <div class="rounded bg-light border d-flex align-items-center justify-content-center text-muted" style="width: 44px; height: 44px;">
+                            <i class="bi bi-image fs-5 opacity-50"></i>
+                          </div>
+                        <?php } ?>
+                      </td>
                       <td>
                         <div class="d-flex align-items-center gap-2">
                           <i class="bi bi-tag text-muted"></i>
@@ -227,7 +284,7 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
                         <div class="modal fade" id="editModal<?= $row['id'] ?>" tabindex="-1" aria-hidden="true">
                           <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content text-start">
-                              <form action="categories.php" method="POST">
+                              <form action="categories.php" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="category_id" value="<?= $row['id'] ?>">
                                 <div class="modal-header">
                                   <h5 class="modal-title fs-6 fw-bold">Edit Category</h5>
@@ -237,6 +294,17 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
                                   <div class="mb-3">
                                     <label class="form-label small fw-bold">Category Name</label>
                                     <input type="text" name="category_name" class="form-control" value="<?= htmlspecialchars($row['name']) ?>" required>
+                                  </div>
+                                  <div class="mb-3">
+                                    <label class="form-label small fw-bold">Category Image</label>
+                                    <?php if (!empty($row['image'])) { ?>
+                                      <div class="mb-2 d-flex align-items-center gap-2">
+                                        <img src="<?= htmlspecialchars($row['image']) ?>" class="rounded border" style="width: 50px; height: 50px; object-fit: cover;" alt="Current Image">
+                                        <span class="text-muted small">Current image on file</span>
+                                      </div>
+                                    <?php } ?>
+                                    <input type="file" name="category_image" class="form-control" accept="image/*">
+                                    <div class="form-text small">Select new image only if you want to replace existing.</div>
                                   </div>
                                 </div>
                                 <div class="modal-footer">
@@ -275,7 +343,7 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
                 } else { 
                 ?>
                     <tr>
-                      <td colspan="4" class="text-center py-4 text-muted">
+                      <td colspan="5" class="text-center py-4 text-muted">
                         No categories found in database. Click <strong>"Add Category"</strong> above to add one.
                       </td>
                     </tr>
@@ -289,15 +357,20 @@ $get_categories = mysqli_query($connection, "SELECT * FROM categories ORDER BY i
         <div class="modal fade" id="addCatModal" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-              <form action="categories.php" method="POST">
+              <form action="categories.php" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                   <h5 class="modal-title fs-6 fw-bold">Add Category</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                   <div class="mb-3">
-                    <label class="form-label small fw-bold">Category Name</label>
-                    <input type="text" name="category_name" class="form-control" placeholder="Enter Category Name" required autofocus>
+                    <label class="form-label small fw-bold">Category Name *</label>
+                    <input type="text" name="category_name" class="form-control" placeholder="Enter Category Name (e.g. Formal Shoes)" required autofocus>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small fw-bold">Category Image *</label>
+                    <input type="file" name="category_image" class="form-control" accept="image/*" required>
+                    <div class="form-text small">Select an image banner or thumbnail for this category (JPG, PNG, WebP).</div>
                   </div>
                 </div>
                 <div class="modal-footer">

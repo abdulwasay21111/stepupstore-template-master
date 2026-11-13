@@ -36,7 +36,7 @@ require_once __DIR__ . "/configs/auth_check.php";
       </div>
 
       <div class="topbar-actions">
-        <a href="../front-site/index.html" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
+        <a href="../front-site/index.php" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
           <i class="bi bi-eye"></i> View Site
         </a>
         
@@ -47,11 +47,11 @@ require_once __DIR__ . "/configs/auth_check.php";
           </a>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 280px;">
             <li><h6 class="dropdown-header text-uppercase small fw-bold">Recent Alerts</h6></li>
-            <li><a class="dropdown-item small py-2" href="orders.html"><i class="bi bi-bag-check text-success me-2"></i> New Order #NF-88291 received (PKR 14,999)</a></li>
-            <li><a class="dropdown-item small py-2" href="inventory.html"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock: Sahara Suede Chukka (9 left)</a></li>
-            <li><a class="dropdown-item small py-2" href="reviews.html"><i class="bi bi-star text-primary me-2"></i> New 5-star review pending approval</a></li>
+            <li><a class="dropdown-item small py-2" href="orders.php"><i class="bi bi-bag-check text-success me-2"></i> New Order #NF-88291 received (PKR 14,999)</a></li>
+            <li><a class="dropdown-item small py-2" href="inventory.php"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock: Sahara Suede Chukka (9 left)</a></li>
+            <li><a class="dropdown-item small py-2" href="reviews.php"><i class="bi bi-star text-primary me-2"></i> New 5-star review pending approval</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.html">View All Notifications</a></li>
+            <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.php">View All Notifications</a></li>
           </ul>
         </div>
 
@@ -64,8 +64,8 @@ require_once __DIR__ . "/configs/auth_check.php";
             </div>
           </a>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-            <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
-            <li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
+            <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
+            <li><a class="dropdown-item" href="settings.php"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item text-danger" href="./actions_handle/logout_handle.php"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
           </ul>
@@ -86,7 +86,7 @@ require_once __DIR__ . "/configs/auth_check.php";
         <button class="btn btn-sm btn-outline-secondary" onclick="alert('Exporting executive PDF summary (Demo)');">
           <i class="bi bi-download me-1"></i> Export PDF
         </button>
-        <a href="product-add.html" class="btn btn-sm btn-dark">
+        <a href="product-add.php" class="btn btn-sm btn-dark">
           <i class="bi bi-plus-circle me-1"></i> Add Product
         </a>
       </div>
@@ -222,7 +222,7 @@ require_once __DIR__ . "/configs/auth_check.php";
         <div class="admin-card h-100">
           <div class="admin-card-header">
             <h5 class="admin-card-title">Top-Selling Footwear</h5>
-            <a href="products.html" class="small text-muted">View Catalog</a>
+            <a href="products.php" class="small text-muted">View Catalog</a>
           </div>
           <div class="admin-card-body p-0">
             <ul class="list-group list-group-flush">
@@ -231,7 +231,7 @@ require_once __DIR__ . "/configs/auth_check.php";
                   <div class="d-flex align-items-center gap-3">
                     <img src="https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?q=80&w=800&auto=format&fit=crop" class="rounded-1" style="width: 44px; height: 44px; object-fit: cover;" alt="Regal Wholecut Oxford">
                     <div>
-                      <h6 class="mb-0 fs-6 fw-semibold"><a href="product-edit.html" class="text-dark">Regal Wholecut Oxford</a></h6>
+                      <h6 class="mb-0 fs-6 fw-semibold"><a href="product-edit.php" class="text-dark">Regal Wholecut Oxford</a></h6>
                       <small class="text-muted">Formal Shoes &bull; 28 in stock</small>
                     </div>
                   </div>
@@ -245,7 +245,7 @@ require_once __DIR__ . "/configs/auth_check.php";
                   <div class="d-flex align-items-center gap-3">
                     <img src="https://images.unsplash.com/photo-1533867617858-e7b97e060509?q=80&w=800&auto=format&fit=crop" class="rounded-1" style="width: 44px; height: 44px; object-fit: cover;" alt="Sienna Burnished Penny Loafer">
                     <div>
-                      <h6 class="mb-0 fs-6 fw-semibold"><a href="product-edit.html" class="text-dark">Sienna Burnished Penny Loafer</a></h6>
+                      <h6 class="mb-0 fs-6 fw-semibold"><a href="product-edit.php" class="text-dark">Sienna Burnished Penny Loafer</a></h6>
                       <small class="text-muted">Loafers &bull; 19 in stock</small>
                     </div>
                   </div>
@@ -259,7 +259,7 @@ require_once __DIR__ . "/configs/auth_check.php";
                   <div class="d-flex align-items-center gap-3">
                     <img src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=800&auto=format&fit=crop" class="rounded-1" style="width: 44px; height: 44px; object-fit: cover;" alt="Kensington Braided Tassel Loafer">
                     <div>
-                      <h6 class="mb-0 fs-6 fw-semibold"><a href="product-edit.html" class="text-dark">Kensington Braided Tassel Loafer</a></h6>
+                      <h6 class="mb-0 fs-6 fw-semibold"><a href="product-edit.php" class="text-dark">Kensington Braided Tassel Loafer</a></h6>
                       <small class="text-muted">Loafers &bull; 14 in stock</small>
                     </div>
                   </div>
@@ -273,7 +273,7 @@ require_once __DIR__ . "/configs/auth_check.php";
                   <div class="d-flex align-items-center gap-3">
                     <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=800&auto=format&fit=crop" class="rounded-1" style="width: 44px; height: 44px; object-fit: cover;" alt="Mayfair Double Monk Strap">
                     <div>
-                      <h6 class="mb-0 fs-6 fw-semibold"><a href="product-edit.html" class="text-dark">Mayfair Double Monk Strap</a></h6>
+                      <h6 class="mb-0 fs-6 fw-semibold"><a href="product-edit.php" class="text-dark">Mayfair Double Monk Strap</a></h6>
                       <small class="text-muted">Formal Shoes &bull; 12 in stock</small>
                     </div>
                   </div>
@@ -298,7 +298,7 @@ require_once __DIR__ . "/configs/auth_check.php";
         <div class="admin-card">
           <div class="admin-card-header">
             <h5 class="admin-card-title">Recent Dispatch Orders</h5>
-            <a href="orders.html" class="btn btn-sm btn-outline-dark">View All 12 Orders</a>
+            <a href="orders.php" class="btn btn-sm btn-outline-dark">View All 12 Orders</a>
           </div>
           <div class="admin-table-wrap">
             <table class="admin-table">
@@ -316,7 +316,7 @@ require_once __DIR__ . "/configs/auth_check.php";
               <tbody class="filterable-table-body">
                 
                   <tr>
-                    <td><strong><a href="order-details.html" class="text-dark">#NF-88291</a></strong></td>
+                    <td><strong><a href="order-details.php" class="text-dark">#NF-88291</a></strong></td>
                     <td>
                       <div>Hamza Tariq</div>
                       <small class="text-muted">Lahore</small>
@@ -330,12 +330,12 @@ require_once __DIR__ . "/configs/auth_check.php";
                       </span>
                     </td>
                     <td>
-                      <a href="order-details.html" class="btn btn-sm btn-outline-secondary py-1 px-2" title="View details"><i class="bi bi-eye"></i></a>
+                      <a href="order-details.php" class="btn btn-sm btn-outline-secondary py-1 px-2" title="View details"><i class="bi bi-eye"></i></a>
                     </td>
                   </tr>
                 
                   <tr>
-                    <td><strong><a href="order-details.html" class="text-dark">#NF-88290</a></strong></td>
+                    <td><strong><a href="order-details.php" class="text-dark">#NF-88290</a></strong></td>
                     <td>
                       <div>Bilal Rehman</div>
                       <small class="text-muted">Karachi</small>
@@ -349,12 +349,12 @@ require_once __DIR__ . "/configs/auth_check.php";
                       </span>
                     </td>
                     <td>
-                      <a href="order-details.html" class="btn btn-sm btn-outline-secondary py-1 px-2" title="View details"><i class="bi bi-eye"></i></a>
+                      <a href="order-details.php" class="btn btn-sm btn-outline-secondary py-1 px-2" title="View details"><i class="bi bi-eye"></i></a>
                     </td>
                   </tr>
                 
                   <tr>
-                    <td><strong><a href="order-details.html" class="text-dark">#NF-88289</a></strong></td>
+                    <td><strong><a href="order-details.php" class="text-dark">#NF-88289</a></strong></td>
                     <td>
                       <div>Daniyal Sheikh</div>
                       <small class="text-muted">Islamabad</small>
@@ -368,12 +368,12 @@ require_once __DIR__ . "/configs/auth_check.php";
                       </span>
                     </td>
                     <td>
-                      <a href="order-details.html" class="btn btn-sm btn-outline-secondary py-1 px-2" title="View details"><i class="bi bi-eye"></i></a>
+                      <a href="order-details.php" class="btn btn-sm btn-outline-secondary py-1 px-2" title="View details"><i class="bi bi-eye"></i></a>
                     </td>
                   </tr>
                 
                   <tr>
-                    <td><strong><a href="order-details.html" class="text-dark">#NF-88288</a></strong></td>
+                    <td><strong><a href="order-details.php" class="text-dark">#NF-88288</a></strong></td>
                     <td>
                       <div>Usman Ghani</div>
                       <small class="text-muted">Faisalabad</small>
@@ -387,12 +387,12 @@ require_once __DIR__ . "/configs/auth_check.php";
                       </span>
                     </td>
                     <td>
-                      <a href="order-details.html" class="btn btn-sm btn-outline-secondary py-1 px-2" title="View details"><i class="bi bi-eye"></i></a>
+                      <a href="order-details.php" class="btn btn-sm btn-outline-secondary py-1 px-2" title="View details"><i class="bi bi-eye"></i></a>
                     </td>
                   </tr>
                 
                   <tr>
-                    <td><strong><a href="order-details.html" class="text-dark">#NF-88287</a></strong></td>
+                    <td><strong><a href="order-details.php" class="text-dark">#NF-88287</a></strong></td>
                     <td>
                       <div>Zain Ul Abideen</div>
                       <small class="text-muted">Rawalpindi</small>
@@ -406,7 +406,7 @@ require_once __DIR__ . "/configs/auth_check.php";
                       </span>
                     </td>
                     <td>
-                      <a href="order-details.html" class="btn btn-sm btn-outline-secondary py-1 px-2" title="View details"><i class="bi bi-eye"></i></a>
+                      <a href="order-details.php" class="btn btn-sm btn-outline-secondary py-1 px-2" title="View details"><i class="bi bi-eye"></i></a>
                     </td>
                   </tr>
                 
@@ -422,7 +422,7 @@ require_once __DIR__ . "/configs/auth_check.php";
         <div class="admin-card mb-4 border-start border-4 border-danger">
           <div class="admin-card-header">
             <h5 class="admin-card-title text-danger"><i class="bi bi-exclamation-triangle me-1"></i> Low Stock Thresholds</h5>
-            <a href="inventory.html" class="small text-danger fw-bold">Manage</a>
+            <a href="inventory.php" class="small text-danger fw-bold">Manage</a>
           </div>
           <div class="admin-card-body p-3">
             <div class="d-flex flex-column gap-2">

@@ -61,7 +61,7 @@ unset($_SESSION['success']);
 
         <div class="d-flex justify-content-between small text-muted">
           <a href="register.php" class="text-muted">Register New Staff</a>
-          <a href="../front-site/index.html" class="text-muted">Back To Storefront &rarr;</a>
+          <a href="../front-site/index.php" class="text-muted">Back To Storefront &rarr;</a>
         </div>
       </form>
     </div>

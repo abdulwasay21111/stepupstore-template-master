@@ -32,7 +32,7 @@
       </div>
 
       <div class="topbar-actions">
-        <a href="../front-site/index.html" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
+        <a href="../front-site/index.php" target="_blank" class="btn btn-sm btn-outline-secondary d-none d-md-inline-flex align-items-center gap-1">
           <i class="bi bi-eye"></i> View Site
         </a>
         
@@ -43,11 +43,11 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 280px;">
             <li><h6 class="dropdown-header text-uppercase small fw-bold">Recent Alerts</h6></li>
-            <li><a class="dropdown-item small py-2" href="orders.html"><i class="bi bi-bag-check text-success me-2"></i> New Order #NF-88291 received (PKR 14,999)</a></li>
-            <li><a class="dropdown-item small py-2" href="inventory.html"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock: Sahara Suede Chukka (9 left)</a></li>
-            <li><a class="dropdown-item small py-2" href="reviews.html"><i class="bi bi-star text-primary me-2"></i> New 5-star review pending approval</a></li>
+            <li><a class="dropdown-item small py-2" href="orders.php"><i class="bi bi-bag-check text-success me-2"></i> New Order #NF-88291 received (PKR 14,999)</a></li>
+            <li><a class="dropdown-item small py-2" href="inventory.php"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Low stock: Sahara Suede Chukka (9 left)</a></li>
+            <li><a class="dropdown-item small py-2" href="reviews.php"><i class="bi bi-star text-primary me-2"></i> New 5-star review pending approval</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.html">View All Notifications</a></li>
+            <li><a class="dropdown-item text-center small text-primary fw-semibold" href="orders.php">View All Notifications</a></li>
           </ul>
         </div>
 
@@ -60,10 +60,10 @@
             </div>
           </a>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-            <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
-            <li><a class="dropdown-item" href="settings.html"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
+            <li><a class="dropdown-item" href="profile.php"><i class="bi bi-person me-2 text-muted"></i> My Profile</a></li>
+            <li><a class="dropdown-item" href="settings.php"><i class="bi bi-gear me-2 text-muted"></i> Store Settings</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="login.html"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
+            <li><a class="dropdown-item text-danger" href="login.php"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
           </ul>
         </div>
       </div>
@@ -77,7 +77,7 @@
         <h1 class="page-title">Client Profile: Hamza Tariq</h1>
         <p class="page-subtitle">Patron ID: CUST-901 &bull; Registered Jan 12, 2026</p>
       </div>
-      <a href="customers.html" class="btn btn-sm btn-dark">Back to Patrons</a>
+      <a href="customers.php" class="btn btn-sm btn-dark">Back to Patrons</a>
     </div>
 
     <div class="row g-4">
