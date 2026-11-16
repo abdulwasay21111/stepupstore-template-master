@@ -25,7 +25,7 @@ mysqli_stmt_execute($stmt2);
 
 $result2 = mysqli_stmt_get_result($stmt2);
 
-// fetch all the products
+
 $best_sellers = mysqli_fetch_all($result2, MYSQLI_ASSOC);
 
 
@@ -37,9 +37,13 @@ $stmt3 = "SELECT products.*, categories.name as category_name FROM products
 
 $result3 = mysqli_query($connection, $stmt3);
 $new_arrivals = mysqli_fetch_all($result3, MYSQLI_ASSOC);
-echo "<pre>";
-print_r($new_arrivals);
-echo "</pre>";
+
+
+// bring web content from database
+  
+
+
+
 
 
 ?>
@@ -311,8 +315,9 @@ echo "</pre>";
                   <div class="product-badges">
 
                     <?php if ($new["is_sale"] == 1) { ?>
-                      <span class="badge-new">Sale</span>
+                      <span class="badge-sale">Sale</span>
                     <?php } ?>
+                    <span class="badge-new">New</span>
                   </div>
                   <button class="product-wishlist-btn" title="Add to Wishlist" data-product-id="NF-1002">
                     <i class="bi bi-heart"></i>
@@ -340,8 +345,13 @@ echo "</pre>";
                     <span class="count">(52)</span>
                   </div>
                   <div class="product-price-box">
-                    <span class="current-price"><?php echo $new["price_pkr"] ?></span>
-                    <span class="original-price"><?php echo $new["original_price_pkr"] ?></span>
+                    <?php if ($new['is_sale'] == 1) { ?>
+                    <span class="current-price">PKR <?php echo $new['price_pkr'] ?></span>
+                    <span class="original-price">PKR <?php echo $new['original_price_pkr'] ?></span>
+                  <?php } else { ?>
+                    <span class="current-price">PKR <?php echo $new['original_price_pkr'] ?></span>
+                  <?php } ?>
+
                   </div>
                   <div class="product-colors">
                     <span class="color-dot" style="background-color: #633d1c;" title="Available Color"></span><span class="color-dot" style="background-color: #141414;" title="Available Color"></span><span class="color-dot" style="background-color: #8c5324;" title="Available Color"></span>
